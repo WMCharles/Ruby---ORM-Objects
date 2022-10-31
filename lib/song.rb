@@ -19,4 +19,17 @@ class Song
         SQL
         DB[:conn].execute(sql)
     end
+
+    # insert instances into db tables
+    def save
+        sql = <<-SQL
+            INSERT INTO songs (name, album) VALUES (?, ?)
+        SQL
+        DB[:conn].execute(sql, self.name, self.album)
+
+        # get id from db and assign instance
+        self.id = DB[:conn].execute("SELECT last_insert_rowid() FROM songs")[0][0]
+
+        self
+    end
 end
